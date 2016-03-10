@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Animal API</title>
+</head>
+
+<body>
+    <button data-animal="giraffe">giraffe</button>
+    <button data-animal="turtle">turtle</button>
+    <button data-animal="tiger">tiger</button>
+    <button data-animal="lion">lion</button>
+    <button data-animal="rhino">rhino</button>
+    <button data-animal="snake">snake</button>
+    <button data-animal="lizard">lizard</button>
+    <button data-animal="elephant">elephant</button>
+    <div id="gifsSection">
+    </div>
+    
+<h1>Search an Animal</h1>
+
+<form>
+ <h2>Animal: <input type="text" id="todo"><input type="submit" value="Add Item" id="addTodo"></h2>
+</form>
+
+<div id="todos"></div>
+
+<script src='http://code.jquery.com/jquery-2.1.3.min.js'></script>
+<script type="text/javascript">
+
+    $('button').on('click', function() {
+        var animal = $(this).data('animal');
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=dc6zaTOxFJmzC&limit=10";
+        $.ajax({
+                url: queryURL,
+                method: 'GET'
+            })
+            .done(function(response) {
+                
+                console.log(queryURL);
+                console.log(response)
+                
+                var results = response.data;
+                
+                for (var i = 0; i < results.length; i++) {
+                    
+                    var animalDiv = $('<div>');
+                    var p = $('<p>').text("Rating: " + results[i].rating);
+                    var animalImage = $('<img>');
+                    animalImage.attr('src', results[i].images.fixed_height.url);
+                    animalDiv.append(p);
+                    animalDiv.append(animalImage);
+                    $('#gifsSection').append(animalDiv);
+                }
+            });
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+<script>
+
+var todoCount = 0
+
+$("#addTodo").on("click", function(){
+    
+    var todoTask = $('#todo').val().trim();
+    
+    var todoItem = $('<button>').on('click', function() {
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=dc6zaTOxFJmzC&limit=10";
+        $.ajax({
+                url: queryURL,
+                method: 'GET'
+            })
+            .done(function(response) {
+                
+                console.log(queryURL);
+                console.log(response)
+                
+                var results = response.data;
+                
+                for (var i = 0; i < results.length; i++) {
+                    
+                    var animalsection = $('<div>');
+                    var p = $('<p>').text("Rating: " + results[i].rating);
+                    var animalImg = $('<img>');
+                    animalImg.attr('src', results[i].images.fixed_height.url);
+                    animalsection.append(p);
+                    animalsection.append(animalImg);
+                    $('#todos').append(animalsection);
+                }
+            });
+    });
+
+
+    // UNABLE TO MAKE THE NEWLY CREATED BUTTON TO LINK PROPERLY TO ANIMAL API
+    
+
+    todoItem.attr("id", "item-" + todoCount);
+    todoItem.append(" " + todoTask);
+   
+    var todoClose = $("<button>");
+    todoClose.attr("data-todo", todoCount++);
+    todoClose.addClass("checkbox");
+    todoClose.append("X");
+    
+    todoItem = todoItem.prepend(todoClose);
+    
+    $("#todos").append(todoItem);
+    
+    $('#todo').val("");
+    
+    return false;
+});
+
+$(document.body).on('click', '.checkbox', function(){
+   
+    var todoNumber = $(this).data("todo");
+    
+    $("#item-" + todoNumber).empty();
+});
+</script>
+
+</body>
+
+</html>
